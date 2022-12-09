@@ -34,12 +34,12 @@ namespace VARS.ViewModels
         private IService varsServ;
 
         string angle = "0";
-        Guid angleUUID = new Guid("00000101-1212-EFDE-1523-785FEABCD123");
         private ICharacteristic angleChar;
+        Guid angleUUID = new Guid("00000101-1212-EFDE-1523-785FEABCD123");
         
         string velocity = "0";
-        Guid velocityUUID = new Guid("00000102-1212-EFDE-1523-785FEABCD123");
         private ICharacteristic velocityChar;
+        Guid velocityUUID = new Guid("00000102-1212-EFDE-1523-785FEABCD123");
 
         public ConnectViewModel()
         {
@@ -105,7 +105,7 @@ namespace VARS.ViewModels
                 Change AABBCCDDEEFF to the MAC Address of your feather
                 This can be usually seen in bluetooth settings, with format AA:BB:CC:DD:EE:FF
                 */
-                await adapter.ConnectToKnownDeviceAsync(new Guid("00000000-0000-0000-0000-dbc06708a345"), cancellationToken);
+                await adapter.ConnectToKnownDeviceAsync(new Guid("00000000-0000-0000-0000-cf4464ab7f65"), cancellationToken);
             });
         }
 

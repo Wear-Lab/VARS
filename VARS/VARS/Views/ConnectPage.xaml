@@ -6,7 +6,7 @@
              Title="{Binding Title}">
     
     <ContentPage.BindingContext>
-        <vm:AboutViewModel />
+        <vm:ConnectViewModel />
     </ContentPage.BindingContext>
     
     <ContentPage.Resources>
@@ -29,12 +29,12 @@
                 <StackLayout Orientation="Vertical" HorizontalOptions="Center" VerticalOptions="Center">
                     <StackLayout Orientation="Horizontal">
                         <Label Text="Angle: " FontSize="80"/>
-                        <Label Text="{Binding Angle}" FontSize="80"/>
+                        <Label Text="{Binding Angle}" FontSize="72"/>
                         <Label Text=" degrees" FontSize="80"/>
                     </StackLayout>
                     <StackLayout Orientation="Horizontal">
                         <Label Text="Speed: " FontSize="80"/>
-                        <Label Text="{Binding Speed}" FontSize="80"/>
+                        <Label Text="{Binding Velocity}" FontSize="72"/>
                         <Label Text=" deg/s" FontSize="80"/>
                     </StackLayout>
                 </StackLayout>
