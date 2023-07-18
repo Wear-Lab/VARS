@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "react-native": "^0.72.3",
+    "react-native-cli": "^2.0.1"
+  }
+}
