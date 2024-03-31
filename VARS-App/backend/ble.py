@@ -50,7 +50,7 @@ async def find_devices():
 
     devices = await BleakScanner.discover(timeout=5)
     for device in devices:
-        if device.name == "Feather nRF52840 Sense":
+        if device.name == "BLUEFRUIT":
             bluetoothData["devices"].append(device)
             bluetoothData["device_name"].append(f"{device.name} ({device.address})")
             bluetoothData["uuids"].append(device.metadata)
