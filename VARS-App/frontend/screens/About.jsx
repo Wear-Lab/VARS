@@ -19,7 +19,7 @@ const About = ({ enterConnect }) => {
         const response = await fetch(`http://${ipAddress}:8000/address`);
         const data = await response.json();
         setDeviceName(data.device_address);
-      } catch (error) {
+      } catch (error) {                              
         console.error("Fetch device failed:", error);
       }
     };

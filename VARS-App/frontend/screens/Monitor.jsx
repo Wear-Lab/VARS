@@ -17,13 +17,13 @@ const Monitor = () => {
         const serviceCharacteristics = [
           // angle
           {
-            service_uuid: '00000100-1212-efde-1523-785feabcd123',
-            characteristic_uuid: '00000101-1212-efde-1523-785feabcd123'
+            service_uuid: '00000100-1212-efde-1523-785feabcd123', //VARS Service
+            characteristic_uuid: '00000101-1212-efde-1523-785feabcd123' //Angle characteristic
           },
           // time
           {
             service_uuid: '00000100-1212-efde-1523-785feabcd123',
-            characteristic_uuid: '00000102-1212-efde-1523-785feabcd123'
+            characteristic_uuid: '00000102-1212-efde-1523-785feabcd123' //Time Characteristic
           },
         ];
 

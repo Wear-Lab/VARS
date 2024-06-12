@@ -50,7 +50,7 @@ async def find_devices():
 
     devices = await BleakScanner.discover(timeout=5)
     for device in devices:
-        if device.name == "BLUEFRUIT":
+        if device.name == "Feather nRF52840 Sense":
             bluetoothData["devices"].append(device)
             bluetoothData["device_name"].append(f"{device.name} ({device.address})")
             bluetoothData["uuids"].append(device.metadata)
@@ -122,14 +122,20 @@ async def get_data(request: List[Dict[str, str]]):
             data = {}
 
             for req in request:
+                
                 service_uuid = req.get("service_uuid")
                 characteristic_uuid = req.get("characteristic_uuid")
+                print("REQUEST UUIDs....................")
+                print("Req service: ", service_uuid);
+                print("Req characteristic: ", characteristic_uuid);
 
                 value = await read_data(service_uuid, characteristic_uuid)
+                print(value);               
                 name = data_name(characteristic_uuid)
                 if name:
                     data[name] = value
-
+                    print(data[name]);
+            print(data)
             return data
 
         except Exception as e:
@@ -141,13 +147,18 @@ async def get_data(request: List[Dict[str, str]]):
 async def read_data(service_uuid: str, characteristic_uuid: str) -> Union[str, None]:
     try:
         for service in client.services:
+            print("COMPARISON\n---------------------")
+            print("service_uuid: ", service_uuid);
+            print("Service.uuid: ", service.uuid);
             if str(service.uuid) == service_uuid:
                 for char in service.characteristics:
+                    print("char.uuid: ", char.uuid);
+                    print("char_uuid: ", characteristic_uuid);
                     if str(char.uuid) == characteristic_uuid:
                         try:
                             value = await client.read_gatt_char(char)
                             string_value = value.decode()
-                            print(string_value)
+                            print("Received data: ", string_value)
                             return { string_value}
                         except Exception as e:
                             print("Failed to read data:", e)
