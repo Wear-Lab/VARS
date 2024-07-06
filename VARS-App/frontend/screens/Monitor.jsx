@@ -44,9 +44,9 @@ const Monitor = () => {
     
   console.log(dataFile);
   // assign data to constants
-  const time = parseFloat(dataFile.time && dataFile.time[0]);
-  const j_angle = parseFloat(dataFile.angle && dataFile.angle[0]);
-  const j_velocity = parseFloat(dataFile.velocity && dataFile.velocity[0]);;
+  const time = Math.round(parseFloat(dataFile.time) * 10000)/10000;
+  const j_angle = Math.round(parseFloat(dataFile.angle)*10000)/10000;
+  const j_velocity = parseFloat(dataFile.velocity);;
   const i_torque = 0;
   const k_torque = 0;
   const p_torque = 0;

@@ -1,12 +1,10 @@
 // 300 degrees is b10k potentiometer max degrees
 // 1023 is max potentiometer value
 // Assuming that the values are linear, this should work
-#include<Arduino.h>
-#include "Adafruit_TinyUSB.h"
 
 #define POTENT_INPUT A0
 
-float SLOPE = 300.00/1023.00;
+float SLOPE = 90.00/310.00;
 
 void setup() {
   // initialize serial communication at 9600 bits per second:
@@ -30,17 +28,24 @@ float prevTime = millis();
 float newAngle = 0;
 float newTime = 0;
 
+
 // the loop routine runs over and over again forever:
 void loop() {
   // read the input on analog pin 0:
-  newAngle = calcAngle(analogRead(POTENT_INPUT));
+  int potent_value = analogRead(POTENT_INPUT);
+  newAngle = calcAngle(potent_value);
   newTime = millis();
 
   int res =  1000 * abs(newAngle - prevAngle) / (newTime - prevTime);
   // print out the value you read:
   Serial.print(newAngle);
   Serial.print("\t");
-  Serial.println(res);
+  Serial.print(res);
+  
+  Serial.print("\t POTENT_INPUT: ");
+  Serial.print(potent_value);
+  Serial.print("\t SLOPE: ");
+  Serial.println(SLOPE);
   prevAngle = newAngle;
   prevTime = newTime;
   //delay(1);  // delay in between reads for stability

@@ -1,5 +1,5 @@
 
-
+#include "Adafruit_TinyUSB.h"
 #include <bluefruit.h>
 #include <BLEService.h>
 // BLE STUFF
@@ -50,6 +50,8 @@ void setup(void)
 
 void startAdv(void)
 {
+  Bluefruit.setName("Feather nRF52840 Sense");
+
   // Advertising packet
   Bluefruit.Advertising.addFlags(BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE);
   Bluefruit.Advertising.addTxPower();
