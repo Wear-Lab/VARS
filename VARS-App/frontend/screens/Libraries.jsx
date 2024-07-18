@@ -6,6 +6,7 @@ const addIcon = require('./images/plus.png');
 
 const Libraries = () => {
 
+  //create button component
   const ProtocolButton = ({ text, icon }) => {
     return (
       <View style={styles.button}>
@@ -16,6 +17,7 @@ const Libraries = () => {
   };
 
   return (
+    //implement ability to scroll
     <ScrollView contentContainerStyle={styles.page}>
       <Text style={styles.title}>Library</Text>
       <ProtocolButton text="Ex Protocol" icon={folderIcon} />
@@ -26,6 +28,7 @@ const Libraries = () => {
     </ScrollView>
   );
 };
+//implemented basic css stylings
 const styles = StyleSheet.create({
   page: {
     flexGrow: 1,
