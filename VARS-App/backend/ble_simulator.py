@@ -55,11 +55,6 @@ async def find_devices():
     bluetoothData["device_name"] = ["BLE_Simulator"]
     bluetoothData["uuids"] = [["00000100-1212-efde-1523-785feabcd123", "00000101-1212-efde-1523-785feabcd123", "00000102-1212-efde-1523-785feabcd123"]]
 
-
-
-    print("BLUETOOTHDATA: " , bluetoothData)
-
-
 # returns list of available bluetooth devices
 @app.get("/devices")
 async def getDevices(): 
@@ -137,7 +132,7 @@ async def get_data(request: List[Dict[str, str]]):
 async def update_angle() -> int:
     global ANGLE_GLOBAL
     global MULT_GLOBAL
-    if ANGLE_GLOBAL % 300 == 0:
+    if ANGLE_GLOBAL > 300 or ANGLE_GLOBAL <= 0:
         MULT_GLOBAL *= -1
     ANGLE_GLOBAL += .1 * MULT_GLOBAL
 
