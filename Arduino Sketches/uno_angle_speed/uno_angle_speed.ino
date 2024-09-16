@@ -4,9 +4,14 @@
 
 #define POTENT_INPUT A5
 
+float DEADZONE = 90-78.34;
+float SLOPE = 90/355.00;
 
-float DEADZONE = 90 - 82.86;
-float SLOPE = 82.86/304.00;
+// // GOOD
+// float DEADZONE = 90 - 82.86; //90 - measured angle at 90 degrees
+// float SLOPE = 90/330.00; //Real 90 degrees and potentiometer value
+
+// float SLOPE = 82.86/304.00;
 /*
 float SLOPE = .2772;
 float DEADZONE = 13.041;
@@ -41,6 +46,7 @@ void loop() {
   newAngle = calcAngle(potent_value);
   newTime = millis();
 
+  // Maybe do potent value instead
   int res =  1000 * abs(newAngle - prevAngle) / (newTime - prevTime);
   // print out the value you read:
   Serial.print(newAngle);
