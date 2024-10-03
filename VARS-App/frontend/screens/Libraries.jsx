@@ -3,71 +3,59 @@ import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from "rea
 import { fetchData } from "./ServiceAPI";
 
 
+
+import axios from 'axios';
+import LocalHost from '../../data/LocalHost';
+import SampleData from '../../data/SampleData';
+
 const folderIcon = require('./images/folder.png');
 const addIcon = require('./images/plus.png');
 
 const Libraries = () => {
-
-
-  // FUTURE TODO: Maybe move this to the protocol.jsx page whenever we create that
-  // We are monitoring the data constantly
-  // To get the current angle, use parseFloat(dataFile.angle)
   const [reading, setReading] = useState(false);
-  [dataFile, setDataFile] = useState({});
-  // TODO: test api call
-  useEffect(()=>{
-    if (reading == false){
-      return;
-    }
-    const continuouslyRead = async ()=>{
-      try{
-        data = await fetchData();
-        setDataFile(data);
-      }
-      catch(error){
-        console.log("Error fetching data in Libraries page: ", error);
-      }
-    }
-
-    const interval = setInterval(continuouslyRead, 100);
-    return () => clearInterval(interval);
-    
-  }, [reading]);
-
-  // Start reading in the angle whenever we enter a protocol page
-  useEffect( ()=>{
-    setReading(true);
-  }, [selectedProtocol]);
-
-
-
-
-  //create states to track which protocol im on
+  const [dataFile, setDataFile] = useState({}); // Fixed the state declaration
   const [selectedProtocol, setSelectedProtocol] = useState(null);
 
-  //handle button clicks
+  useEffect(() => {
+    const continuouslyRead = async () => {
+      if (!reading) return; // Only fetch data if reading is true
+      try {
+        const data =  await fetchData();
+        setDataFile(data);
+      } catch (error) {
+        console.log("Error fetching data in Libraries page: ", error);
+      }
+    };
+
+    continuouslyRead();
+
+    const interval = setInterval(continuouslyRead, 350);
+    return () => clearInterval(interval);
+  }, [reading]);
+
+
+
+
   const handleButtonClick = (protocol) => {
+    setReading(true);
     setSelectedProtocol(protocol);
-  }
+  };
 
-  //reset to protocol list
   const handleBackToMain = () => {
+    setReading(false); // Stop reading when going back to the library
     setSelectedProtocol(null);
-  }
+    console.log("Reading stopped:", reading); // This will log the current state
+  };
 
-
-
-
-  // Define the unique content for each protocol
   const renderProtocolContent = () => {
     switch (selectedProtocol) {
       case "Protocol 1":
-        return(
+        return (
           <View style={styles.protocolContainer}>
-            <Text style = {styles.protocolText}>15 Bicep Curls</Text>
-            <ProgressBox />
+            <Text style={styles.protocolText}>15 Bicep Curls</Text>
+            <ProgressBox angle={parseFloat(dataFile.angle)} />
             <StartButton text="Start Exercise" onPress={() => console.log("Next Exercise for Protocol 1 pressed")} />
-            <BackToLibraryButton text="Back To Library" onPress = {handleBackToMain} ></BackToLibraryButton>
+            <BackToLibraryButton text="Back To Library" onPress={handleBackToMain} />
           </View>
         );
       case "Protocol 2":
@@ -81,52 +69,38 @@ const Libraries = () => {
     }
   };
 
-  //create button component
-  const ProtocolButton = ({ text, icon, onPress }) => {
-    return (
-      <TouchableOpacity onPress={onPress} style={styles.button}>
-        <Image source={icon} style={styles.icon} />
-        <Text style={styles.text}>{text}</Text>
-      </TouchableOpacity>
-    );
-  };
+  const ProtocolButton = ({ text, icon, onPress }) => (
+    <TouchableOpacity onPress={onPress} style={styles.button}>
+      <Image source={icon} style={styles.icon} />
+      <Text style={styles.text}>{text}</Text>
+    </TouchableOpacity>
+  );
 
-  //back to library button
-  const BackToLibraryButton = ({ text, onPress }) => {
-    return (
-      <TouchableOpacity onPress={onPress} style={styles.backbutton}>
-        <Text style={styles.text}>{text}</Text>
-      </TouchableOpacity>
-    );
-  };
-  //start button
-  const StartButton = ({ text, onPress }) => {
-    return (
-      <TouchableOpacity onPress={onPress} style={styles.backButton}>
-        <Text style={styles.text}>{text}</Text>
-      </TouchableOpacity>
-    );
-  };
-  
-  //progress box
-  const ProgressBox = () => {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.progressText}>Progress</Text>
-        <Text style={styles.progressValue}>x/10</Text>
-        <Text style={styles.angleText}>Angle</Text>
-        <Text style={styles.angleValue}>0</Text>
-      </View>
-    );
-  };
-  //main page protocol list
-  
+  const BackToLibraryButton = ({ text, onPress }) => (
+    <TouchableOpacity onPress={onPress} style={styles.backButton}>
+      <Text style={styles.text}>{text}</Text>
+    </TouchableOpacity>
+  );
+
+  const StartButton = ({ text, onPress }) => (
+    <TouchableOpacity onPress={onPress} style={styles.backButton}>
+      <Text style={styles.text}>{text}</Text>
+    </TouchableOpacity>
+  );
+
+  const ProgressBox = ({ angle }) => (
+    <View style={styles.container}>
+      <Text style={styles.progressText}>Progress</Text>
+      <Text style={styles.progressValue}>x/10</Text>
+      <Text style={styles.angleText}>Angle</Text>
+      <Text style={styles.angleValue}>{angle}</Text>
+    </View>
+  );
+
   if (!selectedProtocol) {
     return (
       <ScrollView contentContainerStyle={styles.page}>
         <Text style={styles.title}>Library</Text>
-
-
         <ProtocolButton text="Ex Protocol 1" icon={folderIcon} onPress={() => handleButtonClick("Protocol 1")} />
         <ProtocolButton text="Ex Protocol 2" icon={folderIcon} onPress={() => handleButtonClick("Protocol 2")} />
         <ProtocolButton text="Ex Protocol 3" icon={folderIcon} onPress={() => handleButtonClick("Protocol 3")} />
@@ -134,7 +108,7 @@ const Libraries = () => {
       </ScrollView>
     );
   }
-  //implement render protocol-specific content based on the selected button
+
   return (
     <View style={styles.page}>
       <Text style={styles.title}>{selectedProtocol}</Text>
@@ -143,8 +117,6 @@ const Libraries = () => {
   );
 };
 
-
-//implemented basic css stylings
 const styles = StyleSheet.create({
   page: {
     flexGrow: 1,
@@ -167,10 +139,8 @@ const styles = StyleSheet.create({
     width: '120%',
     alignSelf: 'center',
     justifyContent: 'center',
-    textAlign: 'center',
   },
-
-    backButton: {
+  backButton: {
     alignItems: 'center',
     padding: 20,
     marginVertical: 10,
@@ -178,9 +148,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     width: '100%',
     justifyContent: 'center',
-    textAlign: 'center',
-    },
-    
+  },
   icon: {
     width: 32,
     height: 32,
@@ -189,43 +157,38 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 20,
   },
-
-  //protocol css
   protocolContainer: {
-    flex: 1,               // Ensures the container takes up the full screen height
-    alignItems: 'center',     // Centers items horizontally
+    flex: 1,
+    alignItems: 'center',
     justifyContent: 'flex-start',
   },
-
   protocolText: {
-    fontSize: 30, // Larger font size for the "0"
+    fontSize: 30,
     fontWeight: 'bold',
   },
-
-  //Progress box
   container: {
-    width: 300, // Adjust the size as per your layout
-    height: 300, // Adjust the size as per your layout
-    backgroundColor: '#d3d3d3', // Gray background color
+    width: 300,
+    height: 300,
+    backgroundColor: '#d3d3d3',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 10, // Rounded corners, adjust if necessary
+    borderRadius: 10,
   },
   progressText: {
-    fontSize: 24, // Adjust font size
+    fontSize: 24,
     marginBottom: 10,
   },
   progressValue: {
-    fontSize: 48, // Larger font size for the "x/10"
+    fontSize: 48,
     fontWeight: 'bold',
     marginBottom: 20,
   },
   angleText: {
-    fontSize: 24, // Adjust font size for "Angle"
+    fontSize: 24,
     marginBottom: 10,
   },
   angleValue: {
-    fontSize: 48, // Larger font size for the "0"
+    fontSize: 48,
     fontWeight: 'bold',
   },
 });

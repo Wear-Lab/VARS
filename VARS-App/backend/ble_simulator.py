@@ -132,9 +132,9 @@ async def get_data(request: List[Dict[str, str]]):
 async def update_angle() -> int:
     global ANGLE_GLOBAL
     global MULT_GLOBAL
-    if ANGLE_GLOBAL > 300 or ANGLE_GLOBAL <= 0:
+    if ANGLE_GLOBAL > 200 or ANGLE_GLOBAL <= 0:
         MULT_GLOBAL *= -1
-    ANGLE_GLOBAL += .1 * MULT_GLOBAL
+    ANGLE_GLOBAL += .5 * MULT_GLOBAL
 
     return str(ANGLE_GLOBAL)
 

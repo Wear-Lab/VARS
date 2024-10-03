@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from "react-native";
+import React, { useEffect, useState ,  useCallback} from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import axios from 'axios';
 import LocalHost from '../../data/LocalHost';
 import SampleData from '../../data/SampleData';
@@ -8,11 +8,16 @@ const Monitor = () => {
   const ipAddress = LocalHost.ipAddress;
 
   const [dataFile, setDataFile] = useState({});
+  const [reading, setReading] = useState(true);
+  
+
+
 
   // fetch the device data
   useEffect(() => {
     const fetchData = async () => {
       try {
+        if(reading == false) return;
         // service and characteristic UUIDs
         const serviceCharacteristics = [
           // angle
@@ -40,7 +45,9 @@ const Monitor = () => {
     const interval = setInterval(fetchData, 100);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [reading]);
+
+
     
   console.log(dataFile);
   // assign data to constants
@@ -64,7 +71,14 @@ const Monitor = () => {
         <Text style={styles.text}>Peak Torque: { p_torque }</Text>
         <Text style={styles.text}>Average Peak Torque: { avg_torque }</Text>
       </View>
+
+      <View styles={styles.container}>
+      <TouchableOpacity onPress={() => setReading(!reading)}>
+        <Text style={styles.text}>Toggle Reading</Text>
+      </TouchableOpacity>
+      </View>
     </View>
+    
   );
 };
 
