@@ -2,25 +2,32 @@ import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { fetchData } from "./ServiceAPI";
 
-
-
-import axios from 'axios';
-import LocalHost from '../../data/LocalHost';
-import SampleData from '../../data/SampleData';
-
 const folderIcon = require('./images/folder.png');
 const addIcon = require('./images/plus.png');
 
 const Libraries = () => {
   const [reading, setReading] = useState(false);
-  const [dataFile, setDataFile] = useState({}); // Fixed the state declaration
+  const [dataFile, setDataFile] = useState({});
   const [selectedProtocol, setSelectedProtocol] = useState(null);
+  const [repCount, setRepCount] = useState(0); // Track reps
+  const [isExercising, setIsExercising] = useState(false); // Check if exercise started
+  const [direction, setDirection] = useState(null); // Track angle movement direction
 
   useEffect(() => {
     const continuouslyRead = async () => {
-      if (!reading) return; // Only fetch data if reading is true
+      if (!reading || !isExercising) return;
       try {
-        const data =  await fetchData();
+        const data = await fetchData();
+        const angle = parseFloat(data.angle);
+
+        // Rep counting logic
+        if (angle > 170) {
+          setDirection("down");
+        } else if (angle < 100 && direction === "down") {
+          setRepCount(prevRepCount => prevRepCount + 1);
+          setDirection("up");
+        }
+
         setDataFile(data);
       } catch (error) {
         console.log("Error fetching data in Libraries page: ", error);
@@ -31,20 +38,26 @@ const Libraries = () => {
 
     const interval = setInterval(continuouslyRead, 350);
     return () => clearInterval(interval);
-  }, [reading]);
-
-
-
+  }, [reading, isExercising, direction]);
 
   const handleButtonClick = (protocol) => {
     setReading(true);
     setSelectedProtocol(protocol);
+    setRepCount(0);
+    setDirection(null);
+  };
+
+  const handleStartExercise = () => {
+    setIsExercising(true);
+    setRepCount(0);
+    setDirection(null);
   };
 
   const handleBackToMain = () => {
-    setReading(false); // Stop reading when going back to the library
+    setReading(false);
     setSelectedProtocol(null);
-    console.log("Reading stopped:", reading); // This will log the current state
+    setIsExercising(false);
+    console.log("Reading stopped:", reading);
   };
 
   const renderProtocolContent = () => {
@@ -53,8 +66,8 @@ const Libraries = () => {
         return (
           <View style={styles.protocolContainer}>
             <Text style={styles.protocolText}>15 Bicep Curls</Text>
-            <ProgressBox angle={parseFloat(dataFile.angle)} />
-            <StartButton text="Start Exercise" onPress={() => console.log("Next Exercise for Protocol 1 pressed")} />
+            <ProgressBox angle={parseFloat(dataFile.angle)} reps={repCount} />
+            <StartButton text="Start Exercise" onPress={handleStartExercise} />
             <BackToLibraryButton text="Back To Library" onPress={handleBackToMain} />
           </View>
         );
@@ -88,10 +101,10 @@ const Libraries = () => {
     </TouchableOpacity>
   );
 
-  const ProgressBox = ({ angle }) => (
+  const ProgressBox = ({ angle, reps }) => (
     <View style={styles.container}>
       <Text style={styles.progressText}>Progress</Text>
-      <Text style={styles.progressValue}>x/10</Text>
+      <Text style={styles.progressValue}>{reps}/10</Text>
       <Text style={styles.angleText}>Angle</Text>
       <Text style={styles.angleValue}>{angle}</Text>
     </View>
