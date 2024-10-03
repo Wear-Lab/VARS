@@ -23,7 +23,14 @@ const Libraries = () => {
   const renderProtocolContent = () => {
     switch (selectedProtocol) {
       case "Protocol 1":
-        return <Text>Test unique content</Text>;
+        return(
+          <View style={styles.protocolContainer}>
+            <Text style = {styles.protocolText}>15 Bicep Curls</Text>
+            <ProgressBox />
+            <StartButton text="Start Exercise" onPress={() => console.log("Next Exercise for Protocol 1 pressed")} />
+            <BackToLibraryButton text="Back To Library" onPress = {handleBackToMain} ></BackToLibraryButton>
+          </View>
+        );
       case "Protocol 2":
         return <Text>This is unique content for Protocol 2. You can add specific actions here.</Text>;
       case "Protocol 3":
@@ -45,11 +52,32 @@ const Libraries = () => {
     );
   };
 
+  //back to library button
   const BackToLibraryButton = ({ text, onPress }) => {
     return (
       <TouchableOpacity onPress={onPress} style={styles.backbutton}>
         <Text style={styles.text}>{text}</Text>
       </TouchableOpacity>
+    );
+  };
+  //start button
+  const StartButton = ({ text, onPress }) => {
+    return (
+      <TouchableOpacity onPress={onPress} style={styles.backButton}>
+        <Text style={styles.text}>{text}</Text>
+      </TouchableOpacity>
+    );
+  };
+  
+  //progress box
+  const ProgressBox = () => {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.progressText}>Progress</Text>
+        <Text style={styles.progressValue}>x/10</Text>
+        <Text style={styles.angleText}>Angle</Text>
+        <Text style={styles.angleValue}>0</Text>
+      </View>
     );
   };
   //main page protocol list
@@ -70,8 +98,6 @@ const Libraries = () => {
     <View style={styles.page}>
       <Text style={styles.title}>{selectedProtocol}</Text>
       {renderProtocolContent()}
-      <BackToLibraryButton text="Back To Library" onPress = {handleBackToMain} ></BackToLibraryButton>
-
     </View>
   );
 };
@@ -121,6 +147,45 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 20,
+  },
+
+  //protocol css
+  protocolContainer: {
+    flex: 1,               // Ensures the container takes up the full screen height
+    alignItems: 'center',     // Centers items horizontally
+    justifyContent: 'flex-start',
+  },
+
+  protocolText: {
+    fontSize: 30, // Larger font size for the "0"
+    fontWeight: 'bold',
+  },
+
+  //Progress box
+  container: {
+    width: 300, // Adjust the size as per your layout
+    height: 300, // Adjust the size as per your layout
+    backgroundColor: '#d3d3d3', // Gray background color
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10, // Rounded corners, adjust if necessary
+  },
+  progressText: {
+    fontSize: 24, // Adjust font size
+    marginBottom: 10,
+  },
+  progressValue: {
+    fontSize: 48, // Larger font size for the "x/10"
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  angleText: {
+    fontSize: 24, // Adjust font size for "Angle"
+    marginBottom: 10,
+  },
+  angleValue: {
+    fontSize: 48, // Larger font size for the "0"
+    fontWeight: 'bold',
   },
 });
 
