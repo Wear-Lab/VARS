@@ -1,10 +1,46 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
+import { fetchData } from "./ServiceAPI";
+
 
 const folderIcon = require('./images/folder.png');
 const addIcon = require('./images/plus.png');
 
 const Libraries = () => {
+
+
+  // FUTURE TODO: Maybe move this to the protocol.jsx page whenever we create that
+  // We are monitoring the data constantly
+  // To get the current angle, use parseFloat(dataFile.angle)
+  const [reading, setReading] = useState(false);
+  [dataFile, setDataFile] = useState({});
+  // TODO: test api call
+  useEffect(()=>{
+    if (reading == false){
+      return;
+    }
+    const continuouslyRead = async ()=>{
+      try{
+        data = await fetchData();
+        setDataFile(data);
+      }
+      catch(error){
+        console.log("Error fetching data in Libraries page: ", error);
+      }
+    }
+
+    const interval = setInterval(continuouslyRead, 100);
+    return () => clearInterval(interval);
+    
+  }, [reading]);
+
+  // Start reading in the angle whenever we enter a protocol page
+  useEffect( ()=>{
+    setReading(true);
+  }, [selectedProtocol]);
+
+
+
 
   //create states to track which protocol im on
   const [selectedProtocol, setSelectedProtocol] = useState(null);
@@ -18,6 +54,9 @@ const Libraries = () => {
   const handleBackToMain = () => {
     setSelectedProtocol(null);
   }
+
+
+
 
   // Define the unique content for each protocol
   const renderProtocolContent = () => {
@@ -86,6 +125,8 @@ const Libraries = () => {
     return (
       <ScrollView contentContainerStyle={styles.page}>
         <Text style={styles.title}>Library</Text>
+
+
         <ProtocolButton text="Ex Protocol 1" icon={folderIcon} onPress={() => handleButtonClick("Protocol 1")} />
         <ProtocolButton text="Ex Protocol 2" icon={folderIcon} onPress={() => handleButtonClick("Protocol 2")} />
         <ProtocolButton text="Ex Protocol 3" icon={folderIcon} onPress={() => handleButtonClick("Protocol 3")} />

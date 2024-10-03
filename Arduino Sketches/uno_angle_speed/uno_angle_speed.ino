@@ -2,10 +2,20 @@
 // 1023 is max potentiometer value
 // Assuming that the values are linear, this should work
 
-#define POTENT_INPUT A0
+#define POTENT_INPUT A5
 
-float SLOPE = 90.00/310.00;
+float DEADZONE = 90-78.34;
+float SLOPE = 90/355.00;
 
+// // GOOD
+// float DEADZONE = 90 - 82.86; //90 - measured angle at 90 degrees
+// float SLOPE = 90/330.00; //Real 90 degrees and potentiometer value
+
+// float SLOPE = 82.86/304.00;
+/*
+float SLOPE = .2772;
+float DEADZONE = 13.041;
+*/
 void setup() {
   // initialize serial communication at 9600 bits per second:
   Serial.begin(115200);
@@ -15,10 +25,10 @@ void setup() {
 
 float calcAngle(int potentValue){
   // Simple y = mx+b formula where
-  // b = 0
+  // b = DEADZONE
   // m = SLOPE
   // x = potentValue
-  return potentValue  * SLOPE;
+  return potentValue  * SLOPE + DEADZONE;
   
 }
 
@@ -36,6 +46,7 @@ void loop() {
   newAngle = calcAngle(potent_value);
   newTime = millis();
 
+  // Maybe do potent value instead
   int res =  1000 * abs(newAngle - prevAngle) / (newTime - prevTime);
   // print out the value you read:
   Serial.print(newAngle);

@@ -7,7 +7,7 @@
 #define POTENT_INPUT A0
 
 float SLOPE = 300.00/1023.00;
-
+float DEADZONE = 90/82.39;
 void setup() {
   // initialize serial communication at 9600 bits per second:
   Serial.begin(115200);
@@ -20,7 +20,7 @@ float calcAngle(int potentValue){
   // b = 0
   // m = SLOPE
   // x = potentValue
-  return potentValue  * SLOPE;
+  return potentValue  * SLOPE + DEADZONE;
   
 }
 
