@@ -1,11 +1,16 @@
 // 300 degrees is b10k potentiometer max degrees
 // 1023 is max potentiometer value
 // Assuming that the values are linear, this should work
+#include <bluefruit.h>
 
-#define POTENT_INPUT A5
+#define POTENT_INPUT A4
 
-float DEADZONE = 90-78.34;
-float SLOPE = 90/355.00;
+// float DEADZONE = 30.4;
+float DEADZONE = 0;
+
+float SLOPE = 0.20455012
+
+;
 
 // // GOOD
 // float DEADZONE = 90 - 82.86; //90 - measured angle at 90 degrees
@@ -23,12 +28,24 @@ void setup() {
 
 }
 
-float calcAngle(int potentValue){
+// Pass in voltage
+float calcAngle(int x){
   // Simple y = mx+b formula where
   // b = DEADZONE
   // m = SLOPE
   // x = potentValue
-  return potentValue  * SLOPE + DEADZONE;
+  float m = SLOPE;
+
+  // TODO idea: Piecewise function??
+  if(x  < 510){
+  // if(x  < 365){
+    m = 0.208538158; // HIGHER SLOPE
+  }
+  else m = SLOPE; // LOWER SLOPE
+  // m=SLOPE;
+
+
+  return x  * m + DEADZONE;
   
 }
 
@@ -56,7 +73,7 @@ void loop() {
   Serial.print("\t POTENT_INPUT: ");
   Serial.print(potent_value);
   Serial.print("\t SLOPE: ");
-  Serial.println(SLOPE);
+  Serial.println(SLOPE, 5);
   prevAngle = newAngle;
   prevTime = newTime;
   //delay(1);  // delay in between reads for stability

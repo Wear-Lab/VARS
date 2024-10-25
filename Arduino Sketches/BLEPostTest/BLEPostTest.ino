@@ -18,7 +18,7 @@ float currentAngle = 0.0;
 
 void setup(void)
 {
-  Serial.begin(9600);
+  Serial.begin(115200);
   while ( !Serial ) delay(10);   // for nrf52840 with native usb not needed probably?
 
   Serial.println(F("Adafruit Bluefruit52 Controller App Example"));

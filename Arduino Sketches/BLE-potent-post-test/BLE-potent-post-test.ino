@@ -11,7 +11,7 @@ BLECharacteristic potentiometerChar = BLECharacteristic(POT_UUID_CHAR);
 BLECharacteristic timeChar = BLECharacteristic(TIME_UUID_CHAR);
 
 
-#define sensorPin A3
+#define sensorPin A4
 #define bufferMax 1000
 
 bool running = false;
@@ -40,8 +40,8 @@ void loop() {
       int sensorValue = analogRead(sensorPin);
       unsigned long timeDelta = millis() - timeStart; // current time
 
-      snprintf(potentiometer_res, sizeof(potentiometer_res), ".2f", sensorValue); // Formats the numbers and turns them into strings
-      snprintf(time_res, sizeof(time_res), ".2f", timeDelta);
+      snprintf(potentiometer_res, sizeof(potentiometer_res), "%.2f", sensorValue); // Formats the numbers and turns them into strings
+      snprintf(time_res, sizeof(time_res), "%.2f", timeDelta);
 
 
       Serial.printf("iterator: \t%d, potentiometer_res: \t%s, time_res: \t%s\n", iterator, potentiometer_res, time_res);
