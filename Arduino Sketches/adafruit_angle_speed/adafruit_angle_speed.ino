@@ -8,7 +8,7 @@
 // float DEADZONE = 30.4;
 float DEADZONE = 30.8;
 
-float SLOPE = 0.221556463;
+float SLOPE = 0.0;
 
 // // GOOD
 // float DEADZONE = 90 - 82.86; //90 - measured angle at 90 degrees

@@ -4,7 +4,8 @@ import Monitor from "./Monitor";
 import Libraries from "./Libraries";
 import RawData from "./RawData";
 import About from "./About";
-import Connect from "./Connect"
+import Connect from "./Connect";
+import Test from "./Test";
 
 // Define an array of objects representing each navigation image
 const navItems = [
@@ -44,7 +45,7 @@ const Navigation = () => {
         <Connect exitConnect={handleExitConnect} enterConnect={handleEnterConnect}/>
       ) : (
         <View style={styles.contentContainer}>
-          {activeTab === "Monitoring" && <Monitor />}
+          {activeTab === "Monitoring" && <Test />}
           {activeTab === "Libraries" && <Libraries />}
           {activeTab === "Raw Data" && <RawData />}
           {activeTab === "About" && (<About enterConnect={handleEnterConnect}/>)}
