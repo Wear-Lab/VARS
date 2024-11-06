@@ -83,17 +83,17 @@ void startAdv(void)
 float DEADZONE = 29.1;
 float SLOPE = 0.221556463;
 
-// 78.9 real , 80.7 measured
 
 float calcAngle(int x){
   float m = SLOPE;
+
 
   return x * m + DEADZONE;
 }
 
 void loop(void)
 {
-  if(true){
+  if(Bluefruit.connected()){
     Serial.println("Starting Now!");
 
 
