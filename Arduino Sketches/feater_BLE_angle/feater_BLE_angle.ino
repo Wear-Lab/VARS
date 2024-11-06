@@ -80,16 +80,13 @@ void startAdv(void)
 }
 
 #define POTENT_INPUT A4
-float DEADZONE = 30.8;
+float DEADZONE = 29.1;
 float SLOPE = 0.221556463;
 
 
 float calcAngle(int x){
   float m = SLOPE;
-  if(x < 458){
-    m = 0.227316;
-  }
-  else m =  SLOPE;
+
 
   return x * m + DEADZONE;
 }
