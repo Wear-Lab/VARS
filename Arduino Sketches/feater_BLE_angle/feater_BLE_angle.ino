@@ -9,9 +9,11 @@ BLEUart bleuart; // UART, used to send data over ble
 
 #define VARS_UUID_SERV "00000100-1212-efde-1523-785feabcd123"
 #define ANGLE_UUID_CHAR "00000101-1212-efde-1523-785feabcd123"
+#define SPEED_UUID_CHAR "00000102-1212-efde-1523-785feabcd123"
 
-BLEService angleService = BLEService(VARS_UUID_SERV);
+BLEService varsService = BLEService(VARS_UUID_SERV);
 BLECharacteristic angleCharacteristic = BLECharacteristic(ANGLE_UUID_CHAR); //  BLERead | BLENotify, sizeof(float));
+BLECharacteristic speedCharacteristic = BLECharacteristic(SPEED_UUID_CHAR);
 
 float currentAngle = 0.0;
 
@@ -25,13 +27,17 @@ void setup(void)
   Serial.println(F("-------------------------------------------"));
 
   Bluefruit.begin(); // creates an instance of the board
-  angleService.begin(); // Attach the service to the board
+  varsService.begin(); // Attach the service to the board
 
   angleCharacteristic.setProperties(BLERead | BLENotify);
   angleCharacteristic.begin(); // Adds to prev service that was began
   angleCharacteristic.setProperties(BLERead | BLENotify);
+
+  speedCharacteristic.setProperties(BLERead | BLENotify);
+  speedCharacteristic.begin(); // Adds to prev service that was began
+  speedCharacteristic.setProperties(BLERead | BLENotify);
   
-  //Bluefruit.addService(angleService);
+  //Bluefruit.addService(varsService);
 
   //Bluefruit.setTxPower(4);   // Check bluefruit.h for supported values
 
@@ -57,7 +63,7 @@ void startAdv(void)
   Bluefruit.Advertising.addTxPower();
   
   // Include the BLE UART (AKA 'NUS') 128-bit UUID
-  Bluefruit.Advertising.addService(angleService);
+  Bluefruit.Advertising.addService(varsService);
   //Bluefruit.Advertising.addService(bleuart);
 
   // Secondary Scan Response packet (optional)
@@ -87,7 +93,6 @@ float SLOPE = 0.221556463;
 float calcAngle(int x){
   float m = SLOPE;
 
-
   return x * m + DEADZONE;
 }
 
@@ -110,11 +115,11 @@ void loop(void)
     newTime = millis();
 
     // Maybe do potent value instead
-    int speed =  abs(newAngle - prevAngle) / (newTime - prevTime);
+    int speed = 1000 * abs(newAngle - prevAngle) / (newTime - prevTime);
     // print out the value you read:
     Serial.print(newAngle);
     Serial.print("\t");
-    // Serial.print(speed);
+    Serial.print(speed);
     
     Serial.print("\t\t\t");
     Serial.print("POTENT_INPUT: ");
@@ -124,39 +129,15 @@ void loop(void)
     prevAngle = newAngle;
     prevTime = newTime;
 
-    char res[16];
-    snprintf(res, sizeof(res), "%lf", newAngle);
+    char resAngle[16];
+    char resSpeed[16];
+    snprintf(resAngle, sizeof(resAngle), "%.4lf", newAngle);
+    snprintf(resSpeed, sizeof(resSpeed), "%.4lf", speed);
     
-    angleCharacteristic.write(res);
+    angleCharacteristic.write(resAngle);
+    speedCharacteristic.write(resSpeed);
     }
-    // int potent_value = analogRead(POTENT_INPUT);
-    // newAngle = calcAngle(potent_value);
-    // newTime = millis();
-
-    // // Maybe do potent value instead
-    // int speed =  1000 * abs(newAngle - prevAngle) / (newTime - prevTime);
-    // // print out the value you read:
-    // Serial.print(newAngle);
-    // Serial.print("\t");
-    // // Serial.print(speed);
     
-    // Serial.print("\t\t\t");
-    // Serial.print("POTENT_INPUT: ");
-    // Serial.print(potent_value);
-    // Serial.print("\t SLOPE: ");
-    // Serial.println(SLOPE, 5);
-    // prevAngle = newAngle;
-    // prevTime = newTime;
-
-    // // snprintf(res, sizeof(res), ".4f", x);
-    
-    // angleCharacteristic.write(res);
-    // delay(1000);
-    // /*
-    // running = true;
-    // iterator = 0; // Reset iterator
-    // unsigned long timeStart = millis(); // Current time as of starting
-    // */
   }
 
   delay(1000); // Delay for stability
