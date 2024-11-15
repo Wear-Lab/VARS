@@ -105,8 +105,11 @@ const Libraries = () => {
     <View style={styles.container}>
       <Text style={styles.progressText}>Progress</Text>
       <Text style={styles.progressValue}>{reps}/10</Text>
-      <Text style={styles.angleText}>Angle</Text>
-      <Text style={styles.angleValue}>{angle}</Text>
+      <Text style={styles.protocolText}>Angle</Text>
+      <Text style={styles.protocolValue}>{angle}</Text>
+      <Text style={styles.protocolText}>Speed</Text>
+      <Text style={styles.protocolValue}>{angle}</Text> 
+      {/*I used the same variable name because I think its fine if it looks the same just change the angle value in the last line to whatever variable u store speed in*/}
     </View>
   );
 
@@ -196,11 +199,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
   },
-  angleText: {
+  protocolText: {
     fontSize: 24,
     marginBottom: 10,
   },
-  angleValue: {
+  protocolValue: {
     fontSize: 48,
     fontWeight: 'bold',
   },
