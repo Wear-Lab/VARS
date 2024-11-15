@@ -45,7 +45,7 @@ const Navigation = () => {
         <Connect exitConnect={handleExitConnect} enterConnect={handleEnterConnect}/>
       ) : (
         <View style={styles.contentContainer}>
-          {activeTab === "Monitoring" && <Test />}
+          {activeTab === "Monitoring" && <Monitor />}
           {activeTab === "Libraries" && <Libraries />}
           {activeTab === "Raw Data" && <RawData />}
           {activeTab === "About" && (<About enterConnect={handleEnterConnect}/>)}
