@@ -91,36 +91,42 @@ float calcAngle(int x){
   return x * m + DEADZONE;
 }
 
+
 void loop(void)
 {
-  if(true){
-    Serial.println("Starting Now!");
+  Serial.println("Starting Now!");
 
 
-    float prevAngle = 0;
-    float prevTime = millis();
+  float prevAngle = 0;
+  float prevTime = millis();
 
-    float newAngle = 0;
-    float newTime = 0;    
+  float newAngle = 0;
+  float newTime = 0;    
 
-    while(true){
-      
+  float speed = 0.0;
+
+  while(true){
     int potent_value = analogRead(POTENT_INPUT);
+
     newAngle = calcAngle(potent_value);
     newTime = millis();
+    float timeDeltaSeconds = (newTime - prevTime) / 1000.0; // Convert ms to seconds
 
     // Maybe do potent value instead
-    int speed =  1000 * abs(newAngle - prevAngle) / (newTime - prevTime);
+    // if (timeDeltaSeconds > 0)
+      float speed = abs(newAngle - prevAngle) / timeDeltaSeconds;
+
     // print out the value you read:
     Serial.print(newAngle);
-    Serial.print("\t");
-    // Serial.print(speed);
+    Serial.print("\t\tspeed: ");
+    Serial.print(speed);
     
     Serial.print("\t\t\t");
     Serial.print("POTENT_INPUT: ");
     Serial.print(potent_value);
     Serial.print("\t SLOPE: ");
     Serial.println(SLOPE, 5);
+
     prevAngle = newAngle;
     prevTime = newTime;
 
@@ -128,37 +134,8 @@ void loop(void)
     snprintf(res, sizeof(res), "%lf", newAngle);
     
     angleCharacteristic.write(res);
-    }
-    // int potent_value = analogRead(POTENT_INPUT);
-    // newAngle = calcAngle(potent_value);
-    // newTime = millis();
-
-    // // Maybe do potent value instead
-    // int speed =  1000 * abs(newAngle - prevAngle) / (newTime - prevTime);
-    // // print out the value you read:
-    // Serial.print(newAngle);
-    // Serial.print("\t");
-    // // Serial.print(speed);
-    
-    // Serial.print("\t\t\t");
-    // Serial.print("POTENT_INPUT: ");
-    // Serial.print(potent_value);
-    // Serial.print("\t SLOPE: ");
-    // Serial.println(SLOPE, 5);
-    // prevAngle = newAngle;
-    // prevTime = newTime;
-
-    // // snprintf(res, sizeof(res), ".4f", x);
-    
-    // angleCharacteristic.write(res);
-    // delay(1000);
-    // /*
-    // running = true;
-    // iterator = 0; // Reset iterator
-    // unsigned long timeStart = millis(); // Current time as of starting
-    // */
+    delay(100); // Delay for stability
   }
 
-  delay(1000); // Delay for stability
   
 }

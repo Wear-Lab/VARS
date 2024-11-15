@@ -110,7 +110,7 @@ void loop(void)
     newTime = millis();
 
     // Maybe do potent value instead
-    int speed =  1000 * abs(newAngle - prevAngle) / (newTime - prevTime);
+    int speed =  abs(newAngle - prevAngle) / (newTime - prevTime);
     // print out the value you read:
     Serial.print(newAngle);
     Serial.print("\t");
