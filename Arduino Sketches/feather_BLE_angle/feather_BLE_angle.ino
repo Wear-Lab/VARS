@@ -86,8 +86,8 @@ void startAdv(void)
 }
 
 #define POTENT_INPUT A4
-float DEADZONE = 29.1;
-float SLOPE = 0.221556463;
+float DEADZONE = 35.3; // found from measuring where we get a potentiometer value fluctuating between 0 and 1, may need to change in the future
+float SLOPE = 0.221556463; // Found from linear regression 'line of best fit' while measuring 
 
 
 float calcAngle(int x){

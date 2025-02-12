@@ -79,12 +79,14 @@ void startAdv(void)
   Bluefruit.Advertising.start(0);                // 0 = Don't stop advertising after n seconds  
 }
 
+
+
 #define POTENT_INPUT A4
-float DEADZONE = 29.1;
-float SLOPE = 0.221556463;
+float DEADZONE = 35.3; // found from measuring where we get a potentiometer value fluctuating between 0 and 1, may need to change in the future
+float SLOPE = 0.221556463; // Found from linear regression 'line of best fit' while measuring 
 
-// 78.9 real , 80.7 measured
 
+// Standard slope formula
 float calcAngle(int x){
   float m = SLOPE;
 
@@ -96,7 +98,7 @@ void loop(void)
 {
   Serial.println("Starting Now!");
 
-
+  // Keep track of previous angle and time because we want to use them to calculate speed
   float prevAngle = 0;
   float prevTime = millis();
 
@@ -106,25 +108,29 @@ void loop(void)
   float speed = 0.0;
 
   while(true){
+    // Read in the raw value we get from potentiometer and run it through our formula
     int potent_value = analogRead(POTENT_INPUT);
 
     newAngle = calcAngle(potent_value);
     newTime = millis();
-    float timeDeltaSeconds = (newTime - prevTime) / 1000.0; // Convert ms to seconds
+    float timeDeltaSeconds = (newTime - prevTime); // Convert ms to seconds
 
     // Maybe do potent value instead
-    // if (timeDeltaSeconds > 0)
-      float speed = abs(newAngle - prevAngle) / timeDeltaSeconds;
+    // if (timeDeltaSeconds != 0)
+      float speed = 1000 *abs(newAngle - prevAngle) / timeDeltaSeconds;
 
-    // print out the value you read:
+    // print out the values read:
+    Serial.print("Angle:");
     Serial.print(newAngle);
-    Serial.print("\t\tspeed: ");
+    Serial.print("\t");
+    Serial.print("speed:");
     Serial.print(speed);
     
-    Serial.print("\t\t\t");
-    Serial.print("POTENT_INPUT: ");
+    Serial.print("\t");
+    Serial.print("POTENT_INPUT:");
     Serial.print(potent_value);
-    Serial.print("\t SLOPE: ");
+    Serial.print("\t");
+    Serial.print("SLOPE:");
     Serial.println(SLOPE, 5);
 
     prevAngle = newAngle;
@@ -134,7 +140,7 @@ void loop(void)
     snprintf(res, sizeof(res), "%lf", newAngle);
     
     angleCharacteristic.write(res);
-    delay(100); // Delay for stability
+    delay(100); // Delay for stability (May need to change in the future if we do not want delays during our measurements.)
   }
 
   
