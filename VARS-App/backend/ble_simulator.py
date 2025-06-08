@@ -205,4 +205,6 @@ async def check_connection():
 
 if __name__ == "__main__":
     ip_address = socket.gethostbyname(socket.gethostname())
+    ip_address = '192.168.86.73'
+    print(ip_address)
     uvicorn.run(app, host=ip_address, port=8000)

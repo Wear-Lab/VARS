@@ -117,7 +117,7 @@ void loop(void)
 
     // Maybe do potent value instead
     // if (timeDeltaSeconds != 0)
-      float speed = 1000 *abs(newAngle - prevAngle) / timeDeltaSeconds;
+    float speed = 1000 *abs(newAngle - prevAngle) / timeDeltaSeconds;
 
     // print out the values read:
     Serial.print("Angle:");

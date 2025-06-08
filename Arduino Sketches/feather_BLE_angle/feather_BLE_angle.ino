@@ -89,6 +89,11 @@ void startAdv(void)
 float DEADZONE = 35.3; // found from measuring where we get a potentiometer value fluctuating between 0 and 1, may need to change in the future
 float SLOPE = 0.221556463; // Found from linear regression 'line of best fit' while measuring 
 
+float newLowerBound = 161.5872;
+DEADZONE = 161.5872
+
+
+
 
 float calcAngle(int x){
   float m = SLOPE;
@@ -108,14 +113,17 @@ void loop(void)
     float newAngle = 0;
     float newTime = 0;    
 
+    float speed = 0.0;
+
     while(true){
       
     int potent_value = analogRead(POTENT_INPUT);
+    
     newAngle = calcAngle(potent_value);
     newTime = millis();
 
     // Maybe do potent value instead
-    int speed = 1000 * abs(newAngle - prevAngle) / (newTime - prevTime);
+    float speed = 1000 * abs(newAngle - prevAngle) / (newTime - prevTime);
     // print out the value you read:
     Serial.print(newAngle);
     Serial.print("\t");
@@ -140,6 +148,6 @@ void loop(void)
     
   }
 
-  delay(1000); // Delay for stability
+  delay(250); // Delay for stability
   
 }
